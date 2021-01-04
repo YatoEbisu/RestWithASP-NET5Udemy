@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace RestWithASPNETUdemy.Data.Converter.Contract
 {
-    public interface IParser<O, D>
+    public interface IParse<O, D>
     {
-        D Parser(O origin);
-        List<D> Parser(List<O> origin);
+        D Parse(O origin);
+        List<D> Parse(List<O> origin);
 
     }
 }
