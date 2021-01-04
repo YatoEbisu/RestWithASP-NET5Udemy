@@ -9,33 +9,33 @@ using System.Threading.Tasks;
 
 namespace RestWithASPNETUdemy.Business.Implementations
 {
-    public class BookBusinessImplementation : IBookBusiness
+    public class PersonBusinessImplementation : IPersonBusiness
     {
-        private readonly IBookRepository _repository;
+        private readonly IRepository<Person> _repository;
 
-        public BookBusinessImplementation(IBookRepository repository)
+        public PersonBusinessImplementation(IRepository<Person> repository)
         {
             _repository = repository;
         }
 
-        public List<Book> FindAll()
+        public List<Person> FindAll()
         {
             return _repository.FindAll();
         }
 
-        public Book FindByID(long id)
+        public Person FindByID(long id)
         {
             return _repository.FindByID(id);
         }
 
-        public Book Create(Book book)
+        public Person Create(Person person)
         {
-            return _repository.Create(book);
+            return _repository.Create(person);
         }
 
-        public Book Update(Book book)
+        public Person Update(Person person)
         {
-            return _repository.Update(book);
+            return _repository.Update(person);
         }
 
         public void Delete(long id)
