@@ -36,11 +36,17 @@ namespace RestWithASPNETUdemy
 
         }
 
-     
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
 
             services.AddControllers();
 
@@ -58,7 +64,7 @@ namespace RestWithASPNETUdemy
                 options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
                 options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
             });
-                //.AddXmlSerializerFormatters();
+            //.AddXmlSerializerFormatters();
 
             var filterOption = new HyperMediaFilterOptions();
             filterOption.ContentResponseEnricherList.Add(new PersonEnricher());
@@ -70,7 +76,8 @@ namespace RestWithASPNETUdemy
             services.AddApiVersioning();
 
             //Swagger
-            services.AddSwaggerGen(c => {
+            services.AddSwaggerGen(c =>
+            {
                 c.SwaggerDoc("v1",
                     new Microsoft.OpenApi.Models.OpenApiInfo
                     {
@@ -90,7 +97,7 @@ namespace RestWithASPNETUdemy
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-             
+
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
         }
@@ -108,6 +115,8 @@ namespace RestWithASPNETUdemy
 
             app.UseRouting();
 
+            app.UseCors();
+
             //Swagger start
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -117,7 +126,7 @@ namespace RestWithASPNETUdemy
             });
 
             var option = new RewriteOptions();
-            option.AddRedirect("^$","swagger");
+            option.AddRedirect("^$", "swagger");
             app.UseRewriter(option);
             //Swagger end
 
