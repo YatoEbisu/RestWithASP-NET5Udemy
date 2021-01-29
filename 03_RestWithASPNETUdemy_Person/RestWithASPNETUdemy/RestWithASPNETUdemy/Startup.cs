@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Business.Implementations;
+using RestWithASPNETUdemy.Hypermedia.Enricher;
+using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Repository.Generic;
@@ -54,8 +56,14 @@ namespace RestWithASPNETUdemy
                 options.RespectBrowserAcceptHeader = true;
                 options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
                 options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
-            })
-                .AddXmlSerializerFormatters();
+            });
+                //.AddXmlSerializerFormatters();
+
+            var filterOption = new HyperMediaFilterOptions();
+            filterOption.ContentResponseEnricherList.Add(new PersonEnricher());
+            filterOption.ContentResponseEnricherList.Add(new BookEnricher());
+
+            services.AddSingleton(filterOption);
 
             //Versioning API
             services.AddApiVersioning();
@@ -87,6 +95,7 @@ namespace RestWithASPNETUdemy
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id}");
             });
         }
         private void MigrateDatabase(string connection)
